@@ -6,6 +6,20 @@ import axios from 'axios';
 
 const EditMovieForm = (props) => {
   const navigate = useNavigate();
+  let movieID = useParams();
+  
+  useEffect(() => {
+    axios.get(`http://localhost:9000/api/movies/${movieID.id}`)
+    .then(res => {
+      setMovie({
+        title: res.data.title,
+        director: res.data.director,
+        genre: res.data.genre,
+        metascore: res.data.metascore,
+        description: res.data.description
+      })
+    })
+  }, [])
 
   const { setMovies } = props;
   const [movie, setMovie] = useState({
@@ -25,10 +39,10 @@ const EditMovieForm = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`http://localhost:9000/api/movies/${id}`, movie)
+    axios.put(`http://localhost:9000/api/movies/${movieID.id}`, movie)
       .then(res => {
         setMovies(res.data);
-        navigate(`/movies/${movie.id}`);
+        navigate(`/movies/${movieID.id}`);
       })
       .catch(err => {
         console.log(err);
